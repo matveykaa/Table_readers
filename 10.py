@@ -31,7 +31,7 @@ class XLSXReader(TableReader):
         self._filename = filename
     def read(self) -> list[list[CellValue]]:
         info_list: list[list[CellValue]] = []
-        wb = openpyxl.load_workbook('table.xlsx')
+        wb = openpyxl.load_workbook(self._filename)
         ws = wb.active
         last_row = ws.max_row
         last_column = ws.max_column
