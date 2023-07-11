@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 import csv
-
+import openpyxl
 
 CellValue = str | int | float
 
@@ -26,11 +26,28 @@ class CSVReader(TableReader):
         print(info_list)
         return info_list
 
+class XLSXReader(TableReader):
+    def __init__(self, filename: str):
+        self._filename = filename
+    def read(self) -> list[list[CellValue]]:
+        info_list: list[list[CellValue]] = []
+        wb = openpyxl.load_workbook('table.xlsx')
+        ws = wb.active
+        last_row = ws.max_row
+        last_column = ws.max_column
+        for i in range(1, last_row+1):
+            row_data = []
+            for j in range(1, last_column+1):
+                row_data.append(ws.cell(row=i, column=j).value)
+            info_list.append(row_data)
+        print(info_list)
+        return info_list
+
+
 if __name__ == "__main__":
-    content = [
-        ['Столбец1', 'Столбец2'],
-        [0, 1],
-        [2, 3],
-    ]
+
     reader = CSVReader('table_csv.csv')
+    reader.read()
+
+    reader = XLSXReader('table.xlsx')
     reader.read()
